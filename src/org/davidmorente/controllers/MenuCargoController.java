@@ -201,7 +201,7 @@ public class MenuCargoController implements Initializable{
         }
     }
     
-     public void actualizar(){
+    public void actualizar(){
         try{
             PreparedStatement procedimiento = Conexion.getInstancia().getConexion().prepareCall("{call sp_EditarCargoEmpleado(?, ?, ?)}");
             Cargo registro = (Cargo)tblCargoEmpleado.getSelectionModel().getSelectedItem();

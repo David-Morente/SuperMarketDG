@@ -26,6 +26,7 @@ public class MenuPrincipalControllers implements Initializable {
     @FXML MenuItem btnProveedor;
     @FXML MenuItem btnTipoProducto;
     @FXML MenuItem btnMenuCargoE;
+    @FXML MenuItem btnMenuCompras;
     @FXML MenuItem btnProgramador;
     @FXML private TextField txtDireccionP;
     @FXML private TextField txtWebP;
@@ -75,6 +76,13 @@ public class MenuPrincipalControllers implements Initializable {
     public void clicTipoP (ActionEvent event)throws IOException{
         if (event.getSource() == btnTipoProducto){
             escenarioPrincipal.tipoDeProducto();
+        }
+    }
+    
+    @FXML
+    public void clicCompra (ActionEvent event)throws IOException{
+        if (event.getSource() == btnMenuCompras){
+            escenarioPrincipal.Compras();
         }
     }
     

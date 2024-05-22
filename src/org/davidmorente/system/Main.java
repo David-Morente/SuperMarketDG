@@ -17,6 +17,7 @@ import javafx.scene.layout.AnchorPane;
 import javafx.stage.Stage;
 import org.davidmorente.controllers.MenuCargoController;
 import org.davidmorente.controllers.MenuClienteControllers;
+import org.davidmorente.controllers.MenuComprasController;
 import org.davidmorente.controllers.MenuPrincipalControllers;
 import org.davidmorente.controllers.ProgramadorControllers;
 import org.davidmorente.controllers.MenuProveedorController;
@@ -92,8 +93,17 @@ public class Main extends Application {
     
     public void cargoEmpleado(){
         try{
-          MenuCargoController cargo = (MenuCargoController)cambiarEscena("MenuCargoEmpleadoView.fxml",1039,584);
+          MenuCargoController cargo = (MenuCargoController)cambiarEscena("MenuCargoEmpleadoView.fxml",1022,575);
             cargo.setEscenarioPrincipal(this);
+        }catch(Exception e){
+            e.printStackTrace();
+        }
+    }
+    
+    public void Compras(){
+        try{
+          MenuComprasController compra = (MenuComprasController)cambiarEscena("MenuComprasView.fxml",1068,599);
+            compra.setEscenarioPrincipal(this);
         }catch(Exception e){
             e.printStackTrace();
         }
