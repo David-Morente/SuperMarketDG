@@ -106,5 +106,10 @@ public class Producto {
     public void setProveedor(int proveedor) {
         this.proveedor = proveedor;
     }
+
+    @Override
+    public String toString() {
+        return "Producto = " + descripcionProducto + ", Precio=" + precioUnitario;
+    }
     
 }

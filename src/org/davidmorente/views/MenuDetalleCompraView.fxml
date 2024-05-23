@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <?import javafx.scene.control.Button?>
+<?import javafx.scene.control.ComboBox?>
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.control.TableColumn?>
 <?import javafx.scene.control.TableView?>
@@ -78,13 +79,13 @@
             </Button>
          </children>
       </GridPane>
-      <TableView fx:id="tblProductos" layoutX="316.0" layoutY="169.0" prefHeight="233.0" prefWidth="741.0">
+      <TableView fx:id="tblDetalle" layoutX="316.0" layoutY="169.0" prefHeight="233.0" prefWidth="741.0">
          <columns>
-            <TableColumn fx:id="colCodigoDetalleC" prefWidth="146.0" text="codigoDetalleCompra" />
-            <TableColumn fx:id="colCostoUnitarioC" prefWidth="115.0" text="costoUnitario" />
-            <TableColumn fx:id="colUnidadC" minWidth="4.0" prefWidth="115.0" text="unidad" />
-            <TableColumn fx:id="colCodigoProductoC" prefWidth="167.0" text="codigoProducto" />
-            <TableColumn fx:id="colNumeroDocumentoC" prefWidth="197.0" text="numeroDocumento" />
+            <TableColumn fx:id="colCodigoDC" prefWidth="146.0" text="codigoDetalleCompra" />
+            <TableColumn fx:id="colCosto" prefWidth="115.0" text="costoUnitario" />
+            <TableColumn fx:id="colUnidad" minWidth="4.0" prefWidth="115.0" text="unidad" />
+            <TableColumn fx:id="colCodigoProducto" prefWidth="167.0" text="codigoProducto" />
+            <TableColumn fx:id="colNumeroDocumento" prefWidth="197.0" text="numeroDocumento" />
          </columns>
       </TableView>
       <GridPane layoutX="294.0" layoutY="469.0" prefHeight="139.0" prefWidth="763.0">
@@ -109,8 +110,8 @@
             <TextField fx:id="txtCodigoDetalleC" GridPane.columnIndex="1" />
             <TextField fx:id="txtCostoUnitarioC" GridPane.columnIndex="4" />
             <TextField fx:id="txtUnidadC" GridPane.columnIndex="1" GridPane.rowIndex="1" />
-            <TextField fx:id="txtCodigoProducto" GridPane.columnIndex="4" GridPane.rowIndex="1" />
-            <TextField fx:id="txtNumeroDocumentoC" GridPane.columnIndex="1" GridPane.rowIndex="2" />
+            <ComboBox fx:id="cbProductos" prefHeight="25.0" prefWidth="206.0" GridPane.columnIndex="4" GridPane.rowIndex="1" />
+            <ComboBox fx:id="cbCompras" prefHeight="25.0" prefWidth="240.0" GridPane.columnIndex="1" GridPane.rowIndex="2" />
          </children>
       </GridPane>
    </children>

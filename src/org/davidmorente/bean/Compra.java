@@ -58,6 +58,9 @@ public class Compra {
     public void setTotalDocumento(Double totalDocumento) {
         this.totalDocumento = totalDocumento;
     }
-    
-    
+
+    @Override
+    public String toString() {
+        return "Numero de Documento=" + numeroDocumento;
+    }
 }

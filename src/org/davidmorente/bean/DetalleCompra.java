@@ -13,18 +13,18 @@ public class DetalleCompra {
     private int codigoDetalleCompra;
     private double costoUnitario;
     private int unidad;
-    private String productosCodigoProducto;
-    private int comprasNumeroDocumento;
+    private String codigoProducto;
+    private int numeroDocumento;
 
     public DetalleCompra() {
     }
 
-    public DetalleCompra(int codigoDetalleCompra, double costoUnitario, int unidad, String productosCodigoProducto, int comprasNumeroDocumento) {
+    public DetalleCompra(int codigoDetalleCompra, double costoUnitario, int unidad, String codigoProducto, int numeroDocumento) {
         this.codigoDetalleCompra = codigoDetalleCompra;
         this.costoUnitario = costoUnitario;
         this.unidad = unidad;
-        this.productosCodigoProducto = productosCodigoProducto;
-        this.comprasNumeroDocumento = comprasNumeroDocumento;
+        this.codigoProducto = codigoProducto;
+        this.numeroDocumento = numeroDocumento;
     }
 
     public int getCodigoDetalleCompra() {
@@ -51,20 +51,20 @@ public class DetalleCompra {
         this.unidad = unidad;
     }
 
-    public String getProductosCodigoProducto() {
-        return productosCodigoProducto;
+    public String getCodigoProducto() {
+        return codigoProducto;
     }
 
-    public void setProductosCodigoProducto(String productosCodigoProducto) {
-        this.productosCodigoProducto = productosCodigoProducto;
+    public void setCodigoProducto(String codigoProducto) {
+        this.codigoProducto = codigoProducto;
     }
 
-    public int getComprasNumeroDocumento() {
-        return comprasNumeroDocumento;
+    public int getNumeroDocumento() {
+        return numeroDocumento;
     }
 
-    public void setComprasNumeroDocumento(int comprasNumeroDocumento) {
-        this.comprasNumeroDocumento = comprasNumeroDocumento;
-    }
+    public void setNumeroDocumento(int numeroDocumento) {
+        this.numeroDocumento = numeroDocumento;
+    }    
     
 }
