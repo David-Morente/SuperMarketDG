@@ -97,4 +97,8 @@ public class Proveedores {
         this.paginaWebProveedor = paginaWebProveedor;
     }
        
+    @Override
+    public String toString() {
+        return nombreProveedor + " " + apellidoProveedor;
+    }
 }

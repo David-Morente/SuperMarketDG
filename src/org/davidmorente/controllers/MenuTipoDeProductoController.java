@@ -146,7 +146,7 @@ public class MenuTipoDeProductoController implements Initializable{
             default:
                 if(tblTipoDeProducto.getSelectionModel().getSelectedItem() != null){
                     int respuesta = JOptionPane.showConfirmDialog(null, "Confirmar si va a ellminar registro",
-                            "Eliminar clientes", JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE);
+                            "Eliminar tipo de producto", JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE);
                     if(respuesta == JOptionPane.YES_NO_OPTION){
                         try{
                             PreparedStatement procedimiento = Conexion.getInstancia().getConexion().prepareCall("{call sp_EliminarTipoDeProducto(?)}");

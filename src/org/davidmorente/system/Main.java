@@ -19,6 +19,8 @@ import org.davidmorente.controllers.MenuCargoController;
 import org.davidmorente.controllers.MenuClienteControllers;
 import org.davidmorente.controllers.MenuComprasController;
 import org.davidmorente.controllers.MenuPrincipalControllers;
+import org.davidmorente.controllers.MenuProductosController;
+import org.davidmorente.controllers.MenuDetalleCompraController;
 import org.davidmorente.controllers.ProgramadorControllers;
 import org.davidmorente.controllers.MenuProveedorController;
 import org.davidmorente.controllers.MenuTipoDeProductoController;
@@ -104,6 +106,24 @@ public class Main extends Application {
         try{
           MenuComprasController compra = (MenuComprasController)cambiarEscena("MenuComprasView.fxml",1068,599);
             compra.setEscenarioPrincipal(this);
+        }catch(Exception e){
+            e.printStackTrace();
+        }
+    }
+    
+    public void Productos(){
+        try{
+          MenuProductosController productos = (MenuProductosController)cambiarEscena("MenuProductosView.fxml",1135,636);
+            productos.setEscenarioPrincipal(this);
+        }catch(Exception e){
+            e.printStackTrace();
+        }
+    }
+    
+    public void DetalleCompra(){
+        try{
+          MenuDetalleCompraController detalleCompra = (MenuDetalleCompraController)cambiarEscena("MenuDetalleCompraView.fxml",1135,636);
+            detalleCompra.setEscenarioPrincipal(this);
         }catch(Exception e){
             e.printStackTrace();
         }
