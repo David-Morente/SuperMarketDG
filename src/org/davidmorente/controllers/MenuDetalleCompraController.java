@@ -21,7 +21,9 @@ import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.TextField;
 import javafx.scene.control.cell.PropertyValueFactory;
+import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
+import javax.swing.JOptionPane;
 import org.davidmorente.bean.Compra;
 import org.davidmorente.bean.DetalleCompra;
 import org.davidmorente.bean.Producto;
@@ -71,6 +73,18 @@ public class MenuDetalleCompraController implements Initializable {
         cargarProductos();
         cargarCompras();
         cargarDetalle();
+    }
+    
+    public void seleccionarElemento(){
+        txtCodigoDC.setText(String.valueOf(((DetalleCompra)tblDetalle.getSelectionModel().getSelectedItem()).getCodigoDetalleCompra()));
+        txtCosto.setText(String.valueOf(((DetalleCompra)tblDetalle.getSelectionModel().getSelectedItem()).getCostoUnitario()));
+        txtUnidad.setText(String.valueOf(((DetalleCompra)tblDetalle.getSelectionModel().getSelectedItem()).getUnidad()));
+        
+        //int indexP = ((Producto)tblDetalle.getSelectionModel().getSelectedItem()).getProveedor() - 1;
+        //cbProductos.getSelectionModel().select(indexP);
+        
+        int indexTP = ((DetalleCompra)tblDetalle.getSelectionModel().getSelectedItem()).getNumeroDocumento() - 1;
+        cbCompras.getSelectionModel().select(indexTP);
     }
     
     public ObservableList<DetalleCompra> getDetalleCompras(){
@@ -157,6 +171,180 @@ public class MenuDetalleCompraController implements Initializable {
         colCodigoProducto.setCellValueFactory(new PropertyValueFactory<DetalleCompra, String>("codigoProducto"));
         colNumeroDocumento.setCellValueFactory(new PropertyValueFactory<DetalleCompra, Integer>("numeroDocumento"));
         
+    }
+    
+    public void agregar(){
+        switch(tipoDeOperaciones){
+            case NINGUNO:
+                activarControles();
+                btnAgregar.setText("Guardar");
+                btnEliminar.setText("Eliminar");
+                btnEditar.setDisable(true);
+                btnReportes.setDisable(true);
+                imgAgregar.setImage(new Image("/org/davidmorente/images/Guardar.png"));
+                imgEliminar.setImage(new Image("/org/davidmorente/images/Cancelar.png"));
+                tipoDeOperaciones = operaciones.ACTUALIZAR;
+                break;
+            case ACTUALIZAR:
+                guardar();
+                desactivarControles();
+                limpiarControles();
+                btnAgregar.setText("Agregar");
+                btnEliminar.setText("Eliminar");
+                btnEditar.setDisable(false);
+                btnReportes.setDisable(false);
+                imgAgregar.setImage(new Image("/org/davidmorente/images/Agregar.png"));
+                imgEliminar.setImage(new Image("/org/davidmorente/images/Eliminar.png"));
+                tipoDeOperaciones = operaciones.NINGUNO;
+                break;
+        }
+    }
+    
+    public void guardar(){
+        DetalleCompra registro = new DetalleCompra();
+        
+        registro.setCostoUnitario(Double.parseDouble(txtCosto.getText()));
+        registro.setUnidad(Integer.parseInt(txtUnidad.getText()));
+        registro.setCodigoProducto(cbProductos.getSelectionModel().getSelectedItem().getCodigoProducto());
+        registro.setNumeroDocumento(cbCompras.getSelectionModel().getSelectedItem().getNumeroDocumento());
+        
+        try{
+            PreparedStatement procedimiento = Conexion.getInstancia().getConexion().prepareCall("{call sp_AgregarDetalleCompra(?, ?, ?, ?)}");
+            procedimiento.setDouble(1, registro.getCostoUnitario());
+            procedimiento.setInt(2, registro.getUnidad());
+            procedimiento.setString(3, registro.getCodigoProducto());
+            procedimiento.setInt(4, registro.getNumeroDocumento());
+            
+            procedimiento.execute();
+            cargarDetalle();
+        }catch(Exception e)
+        {
+            
+            e.printStackTrace();
+        }
+    }
+    
+    public void eliminar(){
+        switch(tipoDeOperaciones){
+            case ACTUALIZAR:
+                desactivarControles();
+                limpiarControles();
+                btnAgregar.setText("Agregar");
+                btnEliminar.setText("Eliminar");
+                btnEditar.setDisable(false);
+                btnReportes.setDisable(false);
+                imgAgregar.setImage(new Image("/org/davidmorente/images/Agregar.png"));
+                imgEliminar.setImage(new Image("/org/davidmorente/images/Eliminar.png"));
+                tipoDeOperaciones = operaciones.NINGUNO;
+            break;
+            default:
+                if(tblDetalle.getSelectionModel().getSelectedItem() != null){
+                    int respuesta = JOptionPane.showConfirmDialog(null, "Confirmar si va a ellminar registro",
+                            "Eliminar detalle compra", JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE);
+                    if(respuesta == JOptionPane.YES_NO_OPTION){
+                        try{
+                            PreparedStatement procedimiento = Conexion.getInstancia().getConexion().prepareCall("{call sp_EliminarDetalleCompra(?)}");
+                            procedimiento.setInt(1, ((DetalleCompra)tblDetalle.getSelectionModel().getSelectedItem()).getCodigoDetalleCompra());
+                            procedimiento.execute();
+                            listaDetalleCompra.remove(tblDetalle.getSelectionModel().getSelectedItem());
+                        }catch(Exception e){
+                            e.printStackTrace();
+                        }
+                    }
+                    
+                }else
+                    JOptionPane.showMessageDialog(null, "Debe seleccionar un elemento");
+        }
+    }
+    
+    public void editar(){
+        switch (tipoDeOperaciones){
+            case NINGUNO:
+                if(tblDetalle.getSelectionModel().getSelectedItem() != null){
+                    activarControles();
+                    btnEditar.setText("Actualizar");
+                    btnReportes.setText("Cancelar");
+                    btnAgregar.setDisable(true);
+                    btnEliminar.setDisable(true);
+                    imgEditar.setImage(new Image("/org/davidmorente/images/Editar.png"));
+                    imgReporte.setImage(new Image("/org/davidmorente/images/Cancelar.png"));
+                    tipoDeOperaciones = MenuDetalleCompraController.operaciones.ACTUALIZAR; 
+                }else
+                    JOptionPane.showMessageDialog(null, "Debe de seleccionar algun elemento");
+            break;
+            case ACTUALIZAR:
+                actualizar();
+                btnEditar.setText("Editar");
+                btnReportes.setText("Reportes");
+                btnAgregar.setDisable(false);
+                btnEliminar.setDisable(false);
+                imgEditar.setImage(new Image("/org/davidmorente/images/Agregar.png"));
+                imgReporte.setImage(new Image("/org/davidmorente/images/Reportes.png"));
+                desactivarControles();
+                limpiarControles();
+                tipoDeOperaciones = MenuDetalleCompraController.operaciones.NINGUNO;
+                cargarProductos();
+            break;
+        }
+    }
+    
+    public void actualizar(){
+        try{
+            PreparedStatement procedimiento = Conexion.getInstancia().getConexion().prepareCall("{call sp_EditarProductos(?, ?, ?, ?, ?, ?, ?, ?, ?)}");
+            DetalleCompra registro = (DetalleCompra)tblDetalle.getSelectionModel().getSelectedItem();
+            registro.setCodigoDetalleCompra(Integer.parseInt(txtCodigoDC.getText()));
+            registro.setCostoUnitario(Double.parseDouble(txtCosto.getText()));
+            registro.setUnidad(Integer.parseInt(txtUnidad.getText()));
+            registro.setCodigoProducto(cbProductos.getSelectionModel().getSelectedItem().getCodigoProducto());
+            registro.setNumeroDocumento(cbCompras.getSelectionModel().getSelectedItem().getNumeroDocumento());
+            procedimiento.setInt(1, registro.getCodigoDetalleCompra());
+            procedimiento.setDouble(2, registro.getCostoUnitario());
+            procedimiento.setInt(3, registro.getUnidad());
+            procedimiento.setString(4, registro.getCodigoProducto());
+            procedimiento.setInt(5, registro.getNumeroDocumento());
+            procedimiento.execute();
+        }catch(Exception e){
+            e.printStackTrace();
+        }
+    }
+    
+    public void report(){
+        switch (tipoDeOperaciones) {
+            case ACTUALIZAR:
+                btnEditar.setText("Editar");
+                btnReportes.setText("Reportes");
+                btnAgregar.setDisable(false);
+                btnEliminar.setDisable(false);
+                imgEditar.setImage(new Image("/org/davidmorente/images/Agregar.png"));
+                imgReporte.setImage(new Image("/org/davidmorente/images/Reportes.png"));
+                desactivarControles();
+                limpiarControles();
+                tipoDeOperaciones = operaciones.NINGUNO;
+                cargarProductos();
+                break;
+            default:
+                throw new AssertionError();
+        }
+    }
+    
+    public void desactivarControles(){
+        txtCodigoDC.setEditable(false);
+        txtCosto.setEditable(false);
+        txtUnidad.setEditable(false);
+        cbProductos.setEditable(false);
+        cbCompras.setEditable(false);
+    }
+    
+    public void activarControles(){
+        txtCodigoDC.setEditable(false);
+        txtCosto.setEditable(true);
+        txtUnidad.setEditable(true);
+    }
+    
+    public void limpiarControles(){
+        txtCodigoDC.clear();
+        txtCosto.clear();
+        txtUnidad.clear();
     }
     
     public Main getEscenarioPrincipal() {
