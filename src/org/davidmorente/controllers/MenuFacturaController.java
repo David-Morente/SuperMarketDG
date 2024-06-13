@@ -69,10 +69,10 @@ public class MenuFacturaController implements Initializable{
     
     public void cargarDatos(){
         tblFactura.setItems(getFactura());
-        colNumeroF.setCellValueFactory(new PropertyValueFactory<Factura, Integer>("numeroDocumento"));
-        colEstadoF.setCellValueFactory(new PropertyValueFactory<Factura, DatePicker>("fechaDocumento"));
-        colTotalF.setCellValueFactory(new PropertyValueFactory<Factura, String>("descripcion"));
-        colFechaF.setCellValueFactory(new PropertyValueFactory<Factura, Double>("totalDocumento"));
+        colNumeroF.setCellValueFactory(new PropertyValueFactory<Factura, Integer>("numeroFactura"));
+        colEstadoF.setCellValueFactory(new PropertyValueFactory<Factura, String>("estado"));
+        colTotalF.setCellValueFactory(new PropertyValueFactory<Factura, Double>("totalFactura"));
+        colFechaF.setCellValueFactory(new PropertyValueFactory<Factura, DatePicker>("fechaFactura"));
     }
     
     public void seleccionarElemento(){
@@ -136,16 +136,17 @@ public class MenuFacturaController implements Initializable{
     
     public void guardar(){
         Factura registro = new Factura();
+       
         
         LocalDate localDate = datePickerFecha.getValue();
         Instant instant = Instant.from(localDate.atStartOfDay(ZoneId.systemDefault()));
         Date fecha = Date.from(instant);
         
-        registro.setFechaFactura((java.sql.Date) fecha);
+        registro.setFechaFactura(fecha);
         registro.setEstado(txtEstadoF.getText());
         registro.setTotalFactura(Double.parseDouble(txtTotalF.getText()));
         try{
-            PreparedStatement procedimiento = Conexion.getInstancia().getConexion().prepareCall("{call sp_AgregarCompras(?, ?, ?)}");
+            PreparedStatement procedimiento = Conexion.getInstancia().getConexion().prepareCall("{call sp_AgregarFactura(?, ?, ?)}");
             procedimiento.setString(1, registro.getEstado());
             procedimiento.setDouble(2, registro.getTotalFactura());
             procedimiento.setDate(3, java.sql.Date.valueOf( datePickerFecha.getValue() ));
@@ -225,16 +226,16 @@ public class MenuFacturaController implements Initializable{
     public void actualizar(){
         try{
             LocalDate localDate = datePickerFecha.getValue();
-            Instant instant = Instant.from(localDate.atStartOfDay(ZoneId.systemDefault()));
-            Date fecha = Date.from(instant);
+            java.sql.Date sqlDate = java.sql.Date.valueOf(localDate);
             PreparedStatement procedimiento = Conexion.getInstancia().getConexion().prepareCall("{call sp_EditarFactura(?, ?, ?, ?)}");
-            Factura registro = (Factura)tblFactura.getSelectionModel().getSelectedItem();
-            registro.setFechaFactura((java.sql.Date) fecha);
+            Factura registro = (Factura) tblFactura.getSelectionModel().getSelectedItem();
+            registro.setFechaFactura(new java.util.Date(sqlDate.getTime()));
             registro.setEstado(txtEstadoF.getText());
             registro.setTotalFactura(Double.parseDouble(txtTotalF.getText()));
-            procedimiento.setString(1, registro.getEstado());
-            procedimiento.setDouble(2, registro.getTotalFactura());
-            procedimiento.setDate(3, java.sql.Date.valueOf( datePickerFecha.getValue() ));
+            procedimiento.setInt(1, registro.getNumeroFactura());
+            procedimiento.setString(2, registro.getEstado());
+            procedimiento.setDouble(3, registro.getTotalFactura());
+            procedimiento.setDate(4, java.sql.Date.valueOf( datePickerFecha.getValue() ));
             procedimiento.execute();
         }catch(Exception e){
             e.printStackTrace();
