@@ -591,6 +591,14 @@ Delimiter $$
             where numeroFactura = numFC;
 		End $$
 Delimiter ;
-
+-- ------------------------------Detalle factura-------------------------------------------------------------------
+-- ------------------------------Agregar detalle factura-------------------------------------------------------------------
+Delimiter $$
+	create procedure sp_agregarDetalleFactura(precioUnitario decimal(10,2), cantidad int, factura_numeroFactura int, productos_codigoProducto varchar(15))
+		Begin
+			insert into DetalleFactura(precioUnitario, cantidad, factura_numeroFactura, productos_codigoProducto)
+			values (precioUnitario, cantidad, factura_numeroFactura, productos_codigoProducto);
+			End $$
+Delimiter $$
 
 set time_zone = '-6:00';

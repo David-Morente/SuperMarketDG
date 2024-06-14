@@ -290,7 +290,7 @@ public class MenuDetalleCompraController implements Initializable {
     
     public void actualizar(){
         try{
-            PreparedStatement procedimiento = Conexion.getInstancia().getConexion().prepareCall("{call sp_EditarProductos(?, ?, ?, ?, ?, ?, ?, ?, ?)}");
+            PreparedStatement procedimiento = Conexion.getInstancia().getConexion().prepareCall("{call sp_EditarDetalleCompra(?, ?, ?, ?, ?)}");
             DetalleCompra registro = (DetalleCompra)tblDetalle.getSelectionModel().getSelectedItem();
             registro.setCodigoDetalleCompra(Integer.parseInt(txtCodigoDC.getText()));
             registro.setCostoUnitario(Double.parseDouble(txtCosto.getText()));
