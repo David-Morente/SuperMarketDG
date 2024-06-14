@@ -9,6 +9,8 @@ import java.net.URL;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.ResourceBundle;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -25,6 +27,7 @@ import javafx.scene.image.ImageView;
 import javax.swing.JOptionPane;
 import org.davidmorente.bean.Clientes;
 import org.davidmorente.db.Conexion;
+import org.davidmorente.report.GenerarReportes;
 import org.davidmorente.system.Main;
 
 /**
@@ -255,6 +258,9 @@ public class MenuClienteControllers implements Initializable {
     
     public void report(){
         switch (tipoDeOperaciones) {
+            case NINGUNO:
+                imprimirReporte();
+            break;
             case ACTUALIZAR:
                 btnEditar.setText("Editar");
                 btnReportes.setText("Reportes");
@@ -270,6 +276,13 @@ public class MenuClienteControllers implements Initializable {
             default:
                 throw new AssertionError();
         }
+    }
+    
+    public void imprimirReporte(){
+         Map parametros = new HashMap();
+         parametros.put("CodigoCliente", null);
+         GenerarReportes.mostrarReportes("ReporteClientes.jasper", "Reporte de Clientes", parametros);
+        
     }
     
     public void desactivarControles(){
