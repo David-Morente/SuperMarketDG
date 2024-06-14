@@ -9,6 +9,8 @@ import java.net.URL;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.ResourceBundle;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -28,6 +30,7 @@ import org.davidmorente.bean.Producto;
 import org.davidmorente.bean.Proveedores;
 import org.davidmorente.bean.TipoDeProducto;
 import org.davidmorente.db.Conexion;
+import org.davidmorente.report.GenerarReportes;
 import org.davidmorente.system.Main;
 
 /**
@@ -339,6 +342,9 @@ public class MenuProductosController implements Initializable {
     
     public void report(){
         switch (tipoDeOperaciones) {
+            case NINGUNO:
+                imprimirReporte();
+            break;
             case ACTUALIZAR:
                 btnEditar.setText("Editar");
                 btnReportes.setText("Reportes");
@@ -354,6 +360,13 @@ public class MenuProductosController implements Initializable {
             default:
                 throw new AssertionError();
         }
+    }
+    
+    public void imprimirReporte(){
+         Map parametros = new HashMap();
+         parametros.put("CodigoProductos", null);
+         GenerarReportes.mostrarReportes("ReporteProductos.jasper", "Reporte de Clientes", parametros);
+        
     }
     
     public void desactivarControles(){
