@@ -12,6 +12,7 @@ import java.util.ArrayList;
 import java.util.ResourceBundle;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
+import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.Button;
@@ -72,18 +73,42 @@ public class MenuDetalleFacturaController implements Initializable{
         cargarDetalleFactura();
     }
     
+        public void seleccionarElemento(){
+
+            txtCodigoF.setText(String.valueOf(((DetalleFactura)tblDetalle.getSelectionModel().getSelectedItem()).getCodigoDetalleFactura()));
+            txtPrecioF.setText(String.valueOf(((DetalleFactura)tblDetalle.getSelectionModel().getSelectedItem()).getPrecioUnitario()));
+            txtCantidadF.setText(String.valueOf(((DetalleFactura)tblDetalle.getSelectionModel().getSelectedItem()).getCantidad()));
+
+            int numeroFactura = ((DetalleFactura)tblDetalle.getSelectionModel().getSelectedItem()).getNumeroFactura();
+            for (Factura factura : cbFacturas.getItems()) {
+                if (factura.getNumeroFactura()== numeroFactura) {
+                    cbFacturas.getSelectionModel().select(factura);
+                    break;
+                }
+            }
+
+            String codigoProducto = ((DetalleFactura)tblDetalle.getSelectionModel().getSelectedItem()).getCodigoProducto();
+
+            for (Producto producto : cbProductos.getItems()) {
+                if (producto.getCodigoProducto().equals(codigoProducto)) {
+                    cbProductos.getSelectionModel().select(producto);
+                    break;
+                }
+            }
+        }
+    
     public ObservableList<DetalleFactura> getDetalleFactura(){
             ArrayList<DetalleFactura> Lista = new ArrayList<>();
         
         try{
-            PreparedStatement procedimiento = Conexion.getInstancia().getConexion().prepareCall("{call sp_ListarDetalleCompra()}");
+            PreparedStatement procedimiento = Conexion.getInstancia().getConexion().prepareCall("{call sp_ListarDetalleFactura()}");
             ResultSet resultado = procedimiento.executeQuery();
             while(resultado.next()){
                 Lista.add(new DetalleFactura (resultado.getInt("codigoDetalleFactura"),
                     resultado.getDouble("precioUnitario"),                                        
                     resultado.getInt("cantidad"),
-                    resultado.getInt("factura_numeroFactura"),
-                    resultado.getString("productos_codigoProducto")
+                    resultado.getInt("numeroFactura"),
+                    resultado.getString("codigoProducto")
                 ));
             }
         }catch(Exception e){
@@ -151,10 +176,10 @@ public class MenuDetalleFacturaController implements Initializable{
     public void cargarDetalleFactura() {
         tblDetalle.setItems(getDetalleFactura());
         colDetalleF.setCellValueFactory(new PropertyValueFactory<DetalleFactura, Integer>("codigoDetalleFactura"));
-        colPrecioF.setCellValueFactory(new PropertyValueFactory<DetalleFactura, Double>("costoUnitario"));
+        colPrecioF.setCellValueFactory(new PropertyValueFactory<DetalleFactura, Double>("precioUnitario"));
         colCantidadF.setCellValueFactory(new PropertyValueFactory<DetalleFactura, Integer>("cantidad"));
         colNumeroF.setCellValueFactory(new PropertyValueFactory<DetalleFactura, Integer>("numeroFactura"));
-        colCodigoF.setCellValueFactory(new PropertyValueFactory<DetalleFactura, String>("codigoFactura"));
+        colCodigoF.setCellValueFactory(new PropertyValueFactory<DetalleFactura, String>("codigoProducto"));
         
     }
     
@@ -258,7 +283,7 @@ public class MenuDetalleFacturaController implements Initializable{
                     JOptionPane.showMessageDialog(null, "Debe de seleccionar algun elemento");
             break;
             case ACTUALIZAR:
-                
+                actualizar();
                 btnEditar.setText("Editar");
                 btnReportes.setText("Reportes");
                 btnAgregar.setDisable(false);
@@ -273,7 +298,44 @@ public class MenuDetalleFacturaController implements Initializable{
         }
     }
     
+    public void actualizar(){
+        try{
+            PreparedStatement procedimiento = Conexion.getInstancia().getConexion().prepareCall("{call sp_EditarDetalleFactura(?, ?, ?, ?, ?)}");
+            DetalleFactura registro = (DetalleFactura)tblDetalle.getSelectionModel().getSelectedItem();
+            registro.setCodigoDetalleFactura(Integer.parseInt(txtCodigoF.getText()));
+            registro.setPrecioUnitario(Double.parseDouble(txtPrecioF.getText()));
+            registro.setCantidad(Integer.parseInt(txtCantidadF.getText()));
+            registro.setNumeroFactura(cbFacturas.getSelectionModel().getSelectedItem().getNumeroFactura());
+            registro.setCodigoProducto(cbProductos.getSelectionModel().getSelectedItem().getCodigoProducto());
+            procedimiento.setInt(1, registro.getCodigoDetalleFactura());
+            procedimiento.setDouble(2, registro.getPrecioUnitario());
+            procedimiento.setInt(3, registro.getCantidad());
+            procedimiento.setInt(4, registro.getNumeroFactura());
+            procedimiento.setString(5, registro.getCodigoProducto());
+            procedimiento.execute();
+        }catch(Exception e){
+            e.printStackTrace();
+        }
+    }
     
+    public void report(){
+        switch (tipoDeOperaciones) {
+            case ACTUALIZAR:
+                btnEditar.setText("Editar");
+                btnReportes.setText("Reportes");
+                btnAgregar.setDisable(false);
+                btnEliminar.setDisable(false);
+                imgEditar.setImage(new Image("/org/davidmorente/images/Agregar.png"));
+                imgReporte.setImage(new Image("/org/davidmorente/images/Reportes.png"));
+                desactivarControles();
+                limpiarControles();
+                tipoDeOperaciones = operaciones.NINGUNO;
+                cargarProductos();
+                break;
+            default:
+                throw new AssertionError();
+        }
+    }
     
     public void desactivarControles(){
         txtCodigoF.setEditable(false);
@@ -293,5 +355,20 @@ public class MenuDetalleFacturaController implements Initializable{
         txtCodigoF.clear();
         txtPrecioF.clear();
         txtCantidadF.clear();
+    }
+    
+    public Main getEscenarioPrincipal() {
+        return escenarioDetalleFactura;
+    }
+    
+    public void setEscenarioPrincipal(Main escenarioPrincipal) {
+        this.escenarioDetalleFactura = escenarioPrincipal;
+    }
+    
+    @FXML
+    public void clickRegresar(ActionEvent event){
+        if (event.getSource() == btnRegresar){
+            escenarioDetalleFactura.menuPrincipalView();
+        }
     }
 }

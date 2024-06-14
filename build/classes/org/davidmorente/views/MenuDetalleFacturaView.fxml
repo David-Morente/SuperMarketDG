@@ -14,7 +14,7 @@
 <?import javafx.scene.layout.RowConstraints?>
 
 
-<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="589.0" prefWidth="1062.0" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1">
+<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="589.0" prefWidth="1062.0" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="org.davidmorente.controllers.MenuDetalleFacturaController">
    <children>
       <ImageView fitHeight="598.0" fitWidth="1088.0" pickOnBounds="true" preserveRatio="true">
          <image>
@@ -79,7 +79,7 @@
             </ImageView>
          </graphic>
       </Button>
-      <TableView fx:id="tblCompras" layoutX="241.0" layoutY="162.0" onMouseClicked="#seleccionarElemento" prefHeight="243.0" prefWidth="805.0">
+      <TableView fx:id="tblDetalle" layoutX="241.0" layoutY="162.0" onMouseClicked="#seleccionarElemento" prefHeight="243.0" prefWidth="805.0">
          <columns>
             <TableColumn fx:id="colDetalleF" prefWidth="131.0" text="codigoDetalleFactura" />
             <TableColumn fx:id="colPrecioF" prefWidth="155.0" text="precioUnitario" />

@@ -67,5 +67,4 @@ public class DetalleFactura {
         this.codigoProducto = codigoProducto;
     }
     
-    
 }

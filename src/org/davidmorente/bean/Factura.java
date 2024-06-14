@@ -60,5 +60,8 @@ public class Factura {
         this.fechaFactura = fechaFactura;
     }
     
-    
+    @Override
+    public String toString() {
+        return "Numero de factura = " + numeroFactura;
+    }
 }

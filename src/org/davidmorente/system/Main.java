@@ -21,6 +21,7 @@ import org.davidmorente.controllers.MenuComprasController;
 import org.davidmorente.controllers.MenuPrincipalControllers;
 import org.davidmorente.controllers.MenuProductosController;
 import org.davidmorente.controllers.MenuDetalleCompraController;
+import org.davidmorente.controllers.MenuDetalleFacturaController;
 import org.davidmorente.controllers.MenuFacturaController;
 import org.davidmorente.controllers.ProgramadorControllers;
 import org.davidmorente.controllers.MenuProveedorController;
@@ -134,6 +135,15 @@ public class Main extends Application {
         try{
           MenuFacturaController factura = (MenuFacturaController)cambiarEscena("MenuFacturaView.fxml",1056,595);
             factura.setEscenarioPrincipal(this);
+        }catch(Exception e){
+            e.printStackTrace();
+        }
+    }
+    
+    public void DetalleFactura(){
+        try{
+          MenuDetalleFacturaController detalleFactura = (MenuDetalleFacturaController)cambiarEscena("MenuDetalleFacturaView.fxml",1135,636);
+            detalleFactura.setEscenarioPrincipal(this);
         }catch(Exception e){
             e.printStackTrace();
         }

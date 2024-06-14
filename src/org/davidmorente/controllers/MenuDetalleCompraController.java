@@ -76,15 +76,29 @@ public class MenuDetalleCompraController implements Initializable {
     }
     
     public void seleccionarElemento(){
+        
         txtCodigoDC.setText(String.valueOf(((DetalleCompra)tblDetalle.getSelectionModel().getSelectedItem()).getCodigoDetalleCompra()));
         txtCosto.setText(String.valueOf(((DetalleCompra)tblDetalle.getSelectionModel().getSelectedItem()).getCostoUnitario()));
         txtUnidad.setText(String.valueOf(((DetalleCompra)tblDetalle.getSelectionModel().getSelectedItem()).getUnidad()));
         
-        //int indexP = ((Producto)tblDetalle.getSelectionModel().getSelectedItem()).getProveedor() - 1;
+        String codigoProducto = ((DetalleCompra)tblDetalle.getSelectionModel().getSelectedItem()).getCodigoProducto();
         //cbProductos.getSelectionModel().select(indexP);
         
-        int indexTP = ((DetalleCompra)tblDetalle.getSelectionModel().getSelectedItem()).getNumeroDocumento() - 1;
-        cbCompras.getSelectionModel().select(indexTP);
+        for (Producto producto : cbProductos.getItems()) {
+            if (producto.getCodigoProducto().equals(codigoProducto)) {
+                cbProductos.getSelectionModel().select(producto);
+                break;
+            }
+        }
+        
+        int numeroDocumento = ((DetalleCompra)tblDetalle.getSelectionModel().getSelectedItem()).getNumeroDocumento();
+        for (Compra compra : cbCompras.getItems()) {
+            if (compra.getNumeroDocumento() == numeroDocumento) {
+                cbCompras.getSelectionModel().select(compra);
+                break;
+            }
+        }
+        //cbCompras.getSelectionModel().select(indexTP);
     }
     
     public ObservableList<DetalleCompra> getDetalleCompras(){

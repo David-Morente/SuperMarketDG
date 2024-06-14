@@ -61,6 +61,6 @@ public class Compra {
 
     @Override
     public String toString() {
-        return "Numero de Documento=" + numeroDocumento;
+        return "Numero de Documento =" + numeroDocumento;
     }
 }
